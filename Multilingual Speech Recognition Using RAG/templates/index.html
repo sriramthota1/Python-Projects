@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilingual Speech-to-Text and RAG-based Answer Generation</title>
+</head>
+<body>
+    <h1>Upload an Audio File</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="file" accept="audio/*" required>
+        <label for="target_lang">Target Language (e.g., 'en', 'es', 'te'):</label>
+        <input type="text" name="target_lang" value="en" required>
+        <button type="submit">Upload</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+
+            const response = await fetch('/transcribe', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerHTML = `
+                <h2>Result:</h2>
+                <pre>${result.result}</pre>
+            `;
+        });
+    </script>
+</body>
+</html>
